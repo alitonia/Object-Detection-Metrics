@@ -111,7 +111,7 @@ def calculateAP(pre_rec_s):
     r_v = 0
     for i in range(1, len(pre_rec_s)):
         pr, rc = pre_rec_s[i]
-        prev_pr, prev_rc = pre_rec_s[i - 1][1]
+        prev_pr, prev_rc = pre_rec_s[i - 1]
         new_area = max(pr, prev_pr) * (rc - prev_rc)
         r_v += new_area
     return r_v
@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
     print(f"Precision: {final_precision}, Recall: {final_recall}, AP: {AP}")
 
-    graphing_points = [(0, 1), (1, 2)]
+    # graphing_points = [(0, 1), (1, 2)]
     print(graphing_points)
     plt.plot([i[0] for i in graphing_points], [i[1] for i in graphing_points])
 
