@@ -106,6 +106,17 @@ def calculate_recall(cf_matrix):
         return TP / (TP + FN)
 
 
+# Area under curve implementation
+def calculateAP(pre_rec_s):
+    r_v = 0
+    for i in range(1, len(pre_rec_s)):
+        pr, rc = pre_rec_s[i]
+        prev_pr, prev_rc = pre_rec_s[i - 1][1]
+        new_area = max(pr, prev_pr) * (rc - prev_rc)
+        r_v += new_area
+    return r_v
+
+
 def reader():
     ground_path = 'groundtruths'
     detect_path = 'detections'
@@ -146,7 +157,10 @@ if __name__ == '__main__':
     graphing_points = [i for i in zip(sequence_precision, sequence_recall)]
     graphing_points.sort(key=lambda k: k[1])
 
-    print(f"Precision: {final_precision}, Recall: {final_recall}")
+    AP = calculateAP(graphing_points)
+
+    print(f"Precision: {final_precision}, Recall: {final_recall}, AP: {AP}")
+
     graphing_points = [(0, 1), (1, 2)]
     print(graphing_points)
     plt.plot([i[0] for i in graphing_points], [i[1] for i in graphing_points])
