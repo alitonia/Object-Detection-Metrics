@@ -26,10 +26,10 @@ def shape_to_np(shape, dtype="int"):
     # return the list of (x, y)-coordinates
     return coords
 
-
-detector = dlib.get_frontal_face_detector()  # replace with detector
-
-face_cascade_default = cv2.CascadeClassifier('other/default_cascade.xml')  # remove this
+#
+# detector = dlib.get_frontal_face_detector()  # replace with detector
+#
+# face_cascade_default = cv2.CascadeClassifier('other/default_cascade.xml')  # remove this
 
 default_size = (int(v.stream.get(3)), int(v.stream.get(4)))
 
@@ -62,8 +62,8 @@ while vs.more():
     # faceRects = face_cascade_default.detectMultiScale(
     #     frame, scaleFactor=1.05, minNeighbors=5, minSize=(30, 30),
     #     flags=cv2.CASCADE_SCALE_IMAGE)
-    cv2.rectangle(frame, (20, 20), (100, 100),
-                  (235, 168, 58), 2)
+    # cv2.rectangle(frame, (20, 20), (100, 100),
+    #               (235, 168, 58), 2)
 
     for (fX, fY, fW, fH) in faceRects:
         # extract the face ROI
