@@ -5,10 +5,15 @@ import time
 import cv2
 import dlib
 import time
+import os
 
 from imutils.video import FileVideoStream
 
 vid_path = 'CHUNG_HA_Bicycle.mp4'
+result_path = 'CHUNG_HA_Bicycle_Paradise.mp4'
+
+v = FileVideoStream(vid_path)
+vs = v.start()
 
 
 def shape_to_np(shape, dtype="int"):
@@ -24,12 +29,19 @@ def shape_to_np(shape, dtype="int"):
 
 detector = dlib.get_frontal_face_detector()  # replace with detector
 
-face_cascade_default = cv2.CascadeClassifier('other/default_cascade.xml') # remove this
+face_cascade_default = cv2.CascadeClassifier('other/default_cascade.xml')  # remove this
 
-vs = FileVideoStream(vid_path).start()
+default_size = (int(v.stream.get(3)), int(v.stream.get(4)))
+
+size = default_size
+
+result = cv2.VideoWriter(os.path.splitext(result_path)[0] + '.avi',
+                         cv2.VideoWriter_fourcc(*'MPEG'),
+                         10, size)
+
 time.sleep(2.0)
 
-frame_rate = 30
+frame_rate = 3000
 prev = time.time()
 
 while vs.more():
@@ -42,13 +54,16 @@ while vs.more():
         prev = time.time()
 
     frame = vs.read()
-    frame = imutils.resize(frame, width=450)
+    if frame is None:
+        break
 
     # Replace this with your detect
     faceRects = []
     # faceRects = face_cascade_default.detectMultiScale(
     #     frame, scaleFactor=1.05, minNeighbors=5, minSize=(30, 30),
     #     flags=cv2.CASCADE_SCALE_IMAGE)
+    cv2.rectangle(frame, (20, 20), (100, 100),
+                  (235, 168, 58), 2)
 
     for (fX, fY, fW, fH) in faceRects:
         # extract the face ROI
@@ -63,12 +78,13 @@ while vs.more():
         # smileRects = detectors["smile"].detectMultiScale(
         #     faceROI, scaleFactor=1.1, minNeighbors=10,
         #     minSize=(15, 15), flags=cv2.CASCADE_SCALE_IMAGE)
-
+    result.write(frame)
     cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
     # if the `q` key was pressed, break from the loop
     if key == ord("q"):
         break
 
+result.release()
 cv2.destroyAllWindows()
 vs.stop()
